@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 
 namespace WebAtividadeEntrevista.Models
 {
@@ -11,6 +8,8 @@ namespace WebAtividadeEntrevista.Models
     /// </summary>
     public class ClienteModel
     {
+        private string _CPF;
+
         public long Id { get; set; }
         
         /// <summary>
@@ -66,6 +65,16 @@ namespace WebAtividadeEntrevista.Models
         /// Telefone
         /// </summary>
         public string Telefone { get; set; }
+
+        /// <summary>
+        /// CPF
+        /// </summary>
+        [Required(ErrorMessage = "O Campo CPF obrigatório")]
+        [CustomValidationCPF(ErrorMessage = "O CPF informado é inválido")]
+        public string CPF {
+            get { return _CPF; }
+            set { _CPF = Regex.Replace(value, @"[^\d]+", ""); }
+        }
 
     }    
 }

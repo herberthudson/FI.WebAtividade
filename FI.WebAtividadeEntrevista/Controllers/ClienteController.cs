@@ -3,9 +3,9 @@ using WebAtividadeEntrevista.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using FI.AtividadeEntrevista.DML;
+using System.Text.RegularExpressions;
 
 namespace WebAtividadeEntrevista.Controllers
 {
@@ -26,7 +26,16 @@ namespace WebAtividadeEntrevista.Controllers
         public JsonResult Incluir(ClienteModel model)
         {
             BoCliente bo = new BoCliente();
-            
+
+            bool CPF_existe = new BoCliente().VerificarExistencia(
+                model.CPF
+            );
+
+            if (CPF_existe)
+            {
+                ModelState.AddModelError("CPF", "CPF já está sendo utilizado!");
+            }
+
             if (!this.ModelState.IsValid)
             {
                 List<string> erros = (from item in ModelState.Values
@@ -49,7 +58,8 @@ namespace WebAtividadeEntrevista.Controllers
                     Nacionalidade = model.Nacionalidade,
                     Nome = model.Nome,
                     Sobrenome = model.Sobrenome,
-                    Telefone = model.Telefone
+                    Telefone = model.Telefone,
+                    CPF = model.CPF
                 });
 
            
@@ -84,7 +94,9 @@ namespace WebAtividadeEntrevista.Controllers
                     Nacionalidade = model.Nacionalidade,
                     Nome = model.Nome,
                     Sobrenome = model.Sobrenome,
-                    Telefone = model.Telefone
+                    Telefone = model.Telefone,
+                    CPF = model.CPF
+
                 });
                                
                 return Json("Cadastro alterado com sucesso");
@@ -111,7 +123,8 @@ namespace WebAtividadeEntrevista.Controllers
                     Nacionalidade = cliente.Nacionalidade,
                     Nome = cliente.Nome,
                     Sobrenome = cliente.Sobrenome,
-                    Telefone = cliente.Telefone
+                    Telefone = cliente.Telefone,
+                    CPF = model.CPF
                 };
 
             
