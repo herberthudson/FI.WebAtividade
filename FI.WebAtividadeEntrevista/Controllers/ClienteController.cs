@@ -28,7 +28,6 @@ namespace WebAtividadeEntrevista.Controllers
             BoCliente bo = new BoCliente();
 
             bool CPF_existe = new BoCliente().VerificarExistencia(
-                //Regex.Replace(model.CPF, @"[^\d]+", "")
                 model.CPF
             );
 
@@ -48,7 +47,20 @@ namespace WebAtividadeEntrevista.Controllers
             }
             else
             {
-                
+
+                List<Beneficiario> beneficiarios = new List<Beneficiario>();
+
+                if (!(model.Beneficiarios == null))
+                {
+                    foreach (var bene in model.Beneficiarios)
+                    {
+                        beneficiarios.Add(new Beneficiario() {
+                                CPF = bene.CPF,
+                                Nome = bene.Nome
+                        });
+                    }
+                }
+
                 model.Id = bo.Incluir(new Cliente()
                 {                    
                     CEP = model.CEP,
@@ -60,7 +72,8 @@ namespace WebAtividadeEntrevista.Controllers
                     Nome = model.Nome,
                     Sobrenome = model.Sobrenome,
                     Telefone = model.Telefone,
-                    CPF = model.CPF
+                    CPF = model.CPF,
+                    Beneficiarios = beneficiarios
                 });
 
            
