@@ -1,6 +1,25 @@
 ﻿
 $(document).ready(function () {
 
+    $('#ben_cpf').cpfcnpj({
+        mask: true,
+        validate: 'cpf',
+        event: 'click',
+        handler: '#ben_incluir',
+        ifValid: function (input) {
+            $(input).closest('div[class^="form-group"]').removeClass('has-error');
+            if ($('#ben_nome').innerText != '') {
+                addBeneficiario();
+            } else {
+                $('#ben_nome').focus();
+            }
+        },
+        ifInvalid: function (input) {
+            $(input).closest('div[class^="form-group"]').addClass('has-error');
+            input.focus();
+        }
+    });
+
     $('#CPF').mask('000.000.000-00');
 
     $('#CEP').mask('00000-000');
@@ -22,7 +41,8 @@ $(document).ready(function () {
                 "Cidade": $(this).find("#Cidade").val(),
                 "Logradouro": $(this).find("#Logradouro").val(),
                 "Telefone": $(this).find("#Telefone").val(),
-                "CPF": $(this).find("#CPF").val()
+                "CPF": $(this).find("#CPF").val(),
+                "Beneficiarios": getBeneficiarios()
             },
             error:
             function (r) {

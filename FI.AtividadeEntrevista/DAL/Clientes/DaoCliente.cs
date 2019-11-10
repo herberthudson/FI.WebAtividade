@@ -32,7 +32,27 @@ namespace FI.AtividadeEntrevista.DAL
             parametros.Add(new System.Data.SqlClient.SqlParameter("Telefone", cliente.Telefone));
             parametros.Add(new System.Data.SqlClient.SqlParameter("CPF", cliente.CPF));
 
-            DataSet ds = base.Consultar("FI_SP_IncClienteV2", parametros);
+            DataTable dtBeneficiarios = new DataTable();
+            dtBeneficiarios.Columns.Add("CPF", typeof(string));
+            dtBeneficiarios.Columns.Add("NOME", typeof(string));
+
+            if (cliente.Beneficiarios.Count > 0)
+            {
+                foreach (var beneficiario in cliente.Beneficiarios)
+                {
+                    dtBeneficiarios.Rows.Add(beneficiario.CPF, beneficiario.Nome);
+                }
+
+                parametros.Add(new System.Data.SqlClient.SqlParameter {
+                    ParameterName = "@BENEFICIARIOS",
+                    Value = dtBeneficiarios,
+                    SqlDbType = SqlDbType.Structured
+                });
+            }
+
+            //DataSet ds = base.Consultar("FI_SP_IncClienteV2", parametros);
+
+            DataSet ds = base.Consultar("FI_SP_IncClienteBeneficiarios", parametros);
             long ret = 0;
             if (ds.Tables[0].Rows.Count > 0)
                 long.TryParse(ds.Tables[0].Rows[0][0].ToString(), out ret);

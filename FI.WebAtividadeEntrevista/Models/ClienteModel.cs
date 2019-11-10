@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 
 namespace WebAtividadeEntrevista.Models
@@ -75,6 +76,8 @@ namespace WebAtividadeEntrevista.Models
             get { return _CPF; }
             set { _CPF = Regex.Replace(value, @"[^\d]+", ""); }
         }
+
+        public List<BeneficiarioModel> Beneficiarios { get; set; }
 
     }    
 }

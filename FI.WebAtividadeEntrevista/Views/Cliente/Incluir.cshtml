@@ -1,15 +1,74 @@
 ﻿
 @{
-                /**/
+    /**/
 
-                ViewBag.Title = "Cadastrar Cliente";
+    ViewBag.Title = "Cadastrar Cliente";
 }
 @section scripts{
     <script>
         var urlPost = '@Url.Action("Incluir", "Cliente", new { area = "" })';
+       
+        function addBeneficiario() {
+            const row_cpf = $('.ben_row_cpf');
+            const ben_cpf = $('#ben_cpf');
+
+            if (row_cpf.length > 0) {
+                let duplicado = false;
+                row_cpf.each(function (index, item) {
+                    if (item.innerText == ben_cpf.val()) {
+                        ModalDialog('Error', 'Benificiário já inserido!');
+                        duplicado = true;
+                    }
+                })
+
+                if (!duplicado) {
+                    addRowTableBen();
+                }
+            } else {
+                addRowTableBen();
+            }
+        }
+
+        function addRowTableBen() {
+            const row_id = 'row-' + Math.random().toString().replace('.', '');
+
+            const table_row =
+                '<tr id="' + row_id + '">' +
+                    '<td class="ben_row_cpf"> ' + $('#ben_cpf').val() + '</td>' +
+                    '<td>' + $('#ben_nome').val() + '</td>' +
+                    '<td>' +
+                            '<a onClick="alterarRow(\'' + row_id + '\')" class="btn btn-primary">Alterar</a>' +
+                            '<a onClick="excluirRow(\'' + row_id + '\')" class="btn btn-primary">Excluir</a>' +
+                    '</td>' +
+                '</tr> ';
+
+            $('#ben_table tbody').append(table_row);
+        }
+
+        function excluirRow(id) {
+            $('#'+id).remove();
+        }
+
+        function getBeneficiarios() {
+            var beneficiarios = []
+
+            $('#ben_rows tr').each(function (item, valor) {
+                let beneficiario = {}
+
+                beneficiario["CPF"] = valor.childNodes[0].innerText;
+                beneficiario["Nome"] = valor.childNodes[1].innerText;
+
+                beneficiarios.push(beneficiario);
+            })
+
+            return beneficiarios;
+            
+
+        }
     </script>
     @Scripts.Render("~/bundles/clientes")
     @Scripts.Render("~/Scripts/jquery.mask.min.js")
+    @Scripts.Render("~/Scripts/jquery.cpfcnpj.min.js")
 
 }
 <h2>@Html.Raw(ViewBag.Title)</h2>
